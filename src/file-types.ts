@@ -12,5 +12,6 @@ export default [
     ext: 'pptx',
     type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
   },
-  { ext: 'amr', type: 'audio/amr' }
+  { ext: 'amr', type: 'audio/amr' },
+  { ext: 'wav', type: 'audio/vnd.wave' }
 ]

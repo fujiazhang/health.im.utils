@@ -8,8 +8,7 @@ export default class OSS {
 
   async getPolicy(ext: string = '') {
     const query = ext ? `?ext=${ext}` : ''
-    const response = await this.net.fetch({ url: `/health/foundation/osspolicy${query}` })
-    const data = await response.json()
+    const data = await this.net.fetch({ url: '', queryData: query })
     if (data.code !== 1) {
       throw Error(`policy error: ${JSON.stringify(data)}`)
     }
@@ -23,11 +22,16 @@ export default class OSS {
     formData.append('policy', policy.policy)
     formData.append('Signature', policy.signature)
     formData.append('file', file)
-    await fetch(policy.host, {
+    const response = await fetch(policy.host, {
       method: 'POST',
       body: formData
     })
+    console.log('--------response:', response)
+    if (!response.ok) {
+      throw response
+    }
     return {
+      name: file.name,
       url: policy.url,
       size: file.size,
       type: file.type

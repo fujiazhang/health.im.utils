@@ -1,16 +1,23 @@
 import Net, { NetOptions } from './net'
+import IM from './im'
 import OSS from './oss'
 import HeImage from './image'
 import fileTypes from './file-types'
 
-export interface SDKUtilsOptions extends NetOptions {}
+export type ModuleName = 'im'
+
+export interface SDKUtilsOptions extends NetOptions {
+  version?: string
+}
 
 export default class SDKUtils {
   net: Net
+  im: IM
   oss: OSS
 
   constructor(options: SDKUtilsOptions) {
     this.net = new Net(options)
+    this.im = new IM(this.net)
     this.oss = new OSS(this.net)
   }
 
@@ -20,7 +27,7 @@ export default class SDKUtils {
    * @returns data { url, size, type }
    */
   async upload(file: File) {
-    if (navigator.userAgent.match(/iPhone/i)) {
+    if (navigator.userAgent && navigator.userAgent.match(/iPhone/i)) {
       const heImage = new HeImage(file)
       file = await heImage.fixIOSRotate()
     }
