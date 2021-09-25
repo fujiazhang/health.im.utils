@@ -1,0 +1,31 @@
+export interface NetOptions {
+  getToken: () => string
+  prefix?: string
+}
+
+export interface NetFetchRequest {
+  url: string
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  body?: BodyInit | null
+}
+
+export default class Net {
+  getToken: () => string
+  prefix: string
+
+  constructor(options: NetOptions) {
+    this.getToken = options.getToken
+    this.prefix = options.prefix || '/api'
+  }
+
+  fetch(request: NetFetchRequest) {
+    const { url, ...props } = request
+    const token = this.getToken()
+    return fetch(`${this.prefix}${url}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      ...props
+    })
+  }
+}
